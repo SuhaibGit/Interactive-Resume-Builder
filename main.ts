@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => { 
     const toggleSkillsButton = document.getElementById('Hide-skills');
     const skillsSection = document.getElementById('skills');
 
