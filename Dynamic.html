@@ -9,9 +9,7 @@
 <body style="background-image: url(hero-static.jpg); background-size: cover; align-items: center;">
     <div class="page2">
     <h1>Dynamic Resume</h1>
-    <!-- Toggle Skills Button -->
     <form id="resume-form">
-        <!-- Personal Information Section -->
         <fieldset>
             <legend>Personal Information</legend>
             <label for="name">Full Name:</label>
@@ -24,7 +22,6 @@
             <input type="tel" id="phone" name="phone" required><br>
         </fieldset>
 
-        <!-- Education Section -->
         <fieldset id="education-section">
             <legend>Education</legend>
             <div class="education-entry">
@@ -41,7 +38,6 @@
             <button type="button" id="add-education">+ Add Education</button>
         </fieldset>
 
-        <!-- Work Experience Section -->
         <fieldset id="work-experience-section">
             <legend>Work Experience</legend>
             <div class="work-entry">
@@ -58,7 +54,6 @@
             <button type="button" id="add-experience">+ Add Experience</button>
         </fieldset>
 
-        <!-- Skills Section -->
         <fieldset id="skills-section">
             <legend>Skills</legend>
             <div class="skill-entry">
@@ -70,13 +65,17 @@
         </fieldset>
         <br>
         <button id="Hide-skills">Hide Skills</button>
-        <!-- Submit Button -->
         <button type="button" id="generate-resume-button">Generate Resume</button>
         
     </form>
-    <!-- Placeholder for the generated resume -->
+
     <script src="main.js"></script>
 </div>
-<div id="resume-output"></div>
+<div id="resume-container">
+    <div id="resume-output" contenteditable="true"></div>
+    <button id="edit-button" style="display: none;">Edit</button>
+    <button id="save-button" style="display: none;">Save</button>
+</div>
+
 </body>
 </html>

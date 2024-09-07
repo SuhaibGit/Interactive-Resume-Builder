@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => { 
     const toggleSkillsButton = document.getElementById('Hide-skills');
     const skillsSection = document.getElementById('skills');
+    const resumeContainer = document.getElementById("resume-container");
+    const editButton = document.getElementById("edit-button");
+    const saveButton = document.getElementById("save-button");
 
     if (toggleSkillsButton && skillsSection) {
         toggleSkillsButton.addEventListener('click', () => {
@@ -12,12 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     function generateResume() {
-        // Get form values
         const name = (document.getElementById("name") as HTMLInputElement).value;
         const email = (document.getElementById("email") as HTMLInputElement).value;
         const phone = (document.getElementById("phone") as HTMLInputElement).value;
-
-        // Education entries
         const educationEntries = document.querySelectorAll('.education-entry');
         const educationDetails: string[] = [];
         educationEntries.forEach((entry) => {
@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const graduationYear = (entry.querySelector('input[name="graduation-year"]') as HTMLInputElement).value;
             educationDetails.push(`${degree} from ${institution}, ${graduationYear}`);
         });
-
-        // Work entries
         const workEntries = document.querySelectorAll('.work-entry');
         const workDetails: string[] = [];
         workEntries.forEach((entry) => {
@@ -38,18 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
-        // Corrected line: Get all skill inputs and map to their values
-        // const skills = Array.from(document.querySelectorAll('.skill-entry input'))
-        //                    .map(input => (input as HTMLInputElement).value);
         const skillInputs = document.querySelectorAll('.skill-entry input');
         const skills: string[] = [];
                            
         skillInputs.forEach((input) => {
             skills.push((input as HTMLInputElement).value);
         });
-
-        // Generate the resume dynamically
-        const resumeOutput = `
+        const resumeHtml = `
             <h2>${name}</h2>
             <p>Email: ${email} | Phone: ${phone}</p>
             <h3>Education</h3>
@@ -61,18 +54,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${skills.map(skill => `<li>${skill.trim()}</li>`).join('')}
             </ul>
         `;
+        if (resumeContainer) {
+            const resumeOutput = document.getElementById("resume-output");
+            if (resumeOutput) {
+                resumeOutput.innerHTML = resumeHtml;
+                resumeOutput.setAttribute('contenteditable', 'false');
+            }
+        }
 
-        // Display the generated resume
-        (document.getElementById("resume-output") as HTMLElement).innerHTML = resumeOutput;
+        if (editButton) editButton.style.display = 'inline';
+        if (saveButton) saveButton.style.display = 'none';
     }
 
-    // Attach generateResume function to the button
+    function enableEditing() {
+        const resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
+        resumeSections.forEach(section => {
+            (section as HTMLElement).contentEditable = "true";
+        });
+        if (editButton) editButton.style.display = 'none';
+        if (saveButton) saveButton.style.display = 'inline';
+    }
+
+    function saveChanges() {
+        const resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
+        resumeSections.forEach(section => {
+            (section as HTMLElement).contentEditable = "false";
+        });
+        if (editButton) editButton.style.display = 'inline';
+        if (saveButton) saveButton.style.display = 'none';
+    }
+
     const generateButton = document.getElementById("generate-resume-button");
     if (generateButton) {
         generateButton.addEventListener('click', generateResume);
     }
-
-    // Add new education entry
     const addEducationButton = document.getElementById('add-education');
     if (addEducationButton) {
         addEducationButton.addEventListener('click', () => {
@@ -104,11 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="work-duration">Duration:</label>
                 <input type="text" name="work-duration"><br>
             `;
-            experienceSection?.insertBefore(newExperienceEntry, addEducationButton);
+            experienceSection?.insertBefore(newExperienceEntry, addExperienceButton);
         });
     }
-
-    // Add new skill entry
     const addSkillButton = document.getElementById('add-skill');
     if (addSkillButton) {
         addSkillButton.addEventListener('click', () => {
@@ -121,5 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             skillsSection?.insertBefore(newSkillEntry, addSkillButton);
         });
+    }
+    if (editButton) {
+        editButton.addEventListener('click', enableEditing);
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener('click', saveChanges);
     }
 });

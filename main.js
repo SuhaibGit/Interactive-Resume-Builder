@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     var toggleSkillsButton = document.getElementById('Hide-skills');
     var skillsSection = document.getElementById('skills');
+    var resumeContainer = document.getElementById("resume-container");
+    var editButton = document.getElementById("edit-button");
+    var saveButton = document.getElementById("save-button");
     if (toggleSkillsButton && skillsSection) {
         toggleSkillsButton.addEventListener('click', function () {
             if (skillsSection.style.display === 'none') {
@@ -12,11 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     function generateResume() {
-        // Get form values
         var name = document.getElementById("name").value;
         var email = document.getElementById("email").value;
         var phone = document.getElementById("phone").value;
-        // Education entries
         var educationEntries = document.querySelectorAll('.education-entry');
         var educationDetails = [];
         educationEntries.forEach(function (entry) {
@@ -25,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var graduationYear = entry.querySelector('input[name="graduation-year"]').value;
             educationDetails.push("".concat(degree, " from ").concat(institution, ", ").concat(graduationYear));
         });
-        // Work entries
         var workEntries = document.querySelectorAll('.work-entry');
         var workDetails = [];
         workEntries.forEach(function (entry) {
@@ -34,25 +34,48 @@ document.addEventListener('DOMContentLoaded', function () {
             var workDuration = entry.querySelector('input[name="work-duration"]').value;
             workDetails.push("".concat(jobTitle, " at ").concat(company, " (").concat(workDuration, ")"));
         });
-        // Corrected line: Get all skill inputs and map to their values
-        // const skills = Array.from(document.querySelectorAll('.skill-entry input'))
-        //                    .map(input => (input as HTMLInputElement).value);
         var skillInputs = document.querySelectorAll('.skill-entry input');
         var skills = [];
         skillInputs.forEach(function (input) {
             skills.push(input.value);
         });
-        // Generate the resume dynamically
-        var resumeOutput = "\n            <h2>".concat(name, "</h2>\n            <p>Email: ").concat(email, " | Phone: ").concat(phone, "</p>\n            <h3>Education</h3>\n            <p>").concat(educationDetails.join('<br>'), "</p>\n            <h3>Work Experience</h3>\n            <p>").concat(workDetails.join('<br>'), "</p>\n            <h3>Skills</h3>\n            <ul>\n                ").concat(skills.map(function (skill) { return "<li>".concat(skill.trim(), "</li>"); }).join(''), "\n            </ul>\n        ");
-        // Display the generated resume
-        document.getElementById("resume-output").innerHTML = resumeOutput;
+        var resumeHtml = "\n            <h2>".concat(name, "</h2>\n            <p>Email: ").concat(email, " | Phone: ").concat(phone, "</p>\n            <h3>Education</h3>\n            <p>").concat(educationDetails.join('<br>'), "</p>\n            <h3>Work Experience</h3>\n            <p>").concat(workDetails.join('<br>'), "</p>\n            <h3>Skills</h3>\n            <ul>\n                ").concat(skills.map(function (skill) { return "<li>".concat(skill.trim(), "</li>"); }).join(''), "\n            </ul>\n        ");
+        if (resumeContainer) {
+            var resumeOutput = document.getElementById("resume-output");
+            if (resumeOutput) {
+                resumeOutput.innerHTML = resumeHtml;
+                resumeOutput.setAttribute('contenteditable', 'false');
+            }
+        }
+        if (editButton)
+            editButton.style.display = 'inline';
+        if (saveButton)
+            saveButton.style.display = 'none';
     }
-    // Attach generateResume function to the button
+    function enableEditing() {
+        var resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
+        resumeSections.forEach(function (section) {
+            section.contentEditable = "true";
+        });
+        if (editButton)
+            editButton.style.display = 'none';
+        if (saveButton)
+            saveButton.style.display = 'inline';
+    }
+    function saveChanges() {
+        var resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
+        resumeSections.forEach(function (section) {
+            section.contentEditable = "false";
+        });
+        if (editButton)
+            editButton.style.display = 'inline';
+        if (saveButton)
+            saveButton.style.display = 'none';
+    }
     var generateButton = document.getElementById("generate-resume-button");
     if (generateButton) {
         generateButton.addEventListener('click', generateResume);
     }
-    // Add new education entry
     var addEducationButton = document.getElementById('add-education');
     if (addEducationButton) {
         addEducationButton.addEventListener('click', function () {
@@ -70,10 +93,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var newExperienceEntry = document.createElement('div');
             newExperienceEntry.classList.add('work-entry');
             newExperienceEntry.innerHTML = "\n                <label for=\"job-title\">Job Title:</label>\n                <input type=\"text\" name=\"job-title\"><br>\n                <label for=\"company\">Company:</label>\n                <input type=\"text\" name=\"company\"><br>\n                <label for=\"work-duration\">Duration:</label>\n                <input type=\"text\" name=\"work-duration\"><br>\n            ";
-            experienceSection === null || experienceSection === void 0 ? void 0 : experienceSection.insertBefore(newExperienceEntry, addEducationButton);
+            experienceSection === null || experienceSection === void 0 ? void 0 : experienceSection.insertBefore(newExperienceEntry, addExperienceButton);
         });
     }
-    // Add new skill entry
     var addSkillButton = document.getElementById('add-skill');
     if (addSkillButton) {
         addSkillButton.addEventListener('click', function () {
@@ -83,5 +105,11 @@ document.addEventListener('DOMContentLoaded', function () {
             newSkillEntry.innerHTML = "\n                <label for=\"skills\">Skill:</label>\n                <input type=\"text\" name=\"skills\"><br>\n            ";
             skillsSection === null || skillsSection === void 0 ? void 0 : skillsSection.insertBefore(newSkillEntry, addSkillButton);
         });
+    }
+    if (editButton) {
+        editButton.addEventListener('click', enableEditing);
+    }
+    if (saveButton) {
+        saveButton.addEventListener('click', saveChanges);
     }
 });

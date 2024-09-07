@@ -195,7 +195,7 @@ legend{
     display: flex;
     flex-direction: column;
 }
-#resume-output{
+#resume-container{
     margin: 2rem 0rem 2rem 0rem;
     
     background-color: whitesmoke;
