@@ -1,4 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var jspdf_1 = require("jspdf");
 document.addEventListener('DOMContentLoaded', function () {
+    var _a;
     var toggleSkillsButton = document.getElementById('Hide-skills');
     var skillsSection = document.getElementById('skills');
     var resumeContainer = document.getElementById("resume-container");
@@ -52,6 +56,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (saveButton)
             saveButton.style.display = 'none';
     }
+    function generatePDF() {
+        // Create a new jsPDF instance
+        var doc = new jspdf_1.jsPDF();
+        // Get the resume content
+        var resumeContent = document.getElementById("resume-output");
+        if (resumeContent) {
+            doc.html(resumeContent, {
+                callback: function (doc) {
+                    // Save the PDF document
+                    doc.save('resume.pdf');
+                },
+                x: 10,
+                y: 10
+            });
+        }
+    }
     function enableEditing() {
         var resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
         resumeSections.forEach(function (section) {
@@ -72,6 +92,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (saveButton)
             saveButton.style.display = 'none';
     }
+    var baseurl = "vercel.app";
+    function generateResumeURL(username) {
+        var trimmedUsername = username.trim();
+        if (!trimmedUsername) {
+            return '';
+        }
+        return "http://".concat(trimmedUsername, ".").concat(baseurl);
+    }
+    function updateResumeLink() {
+        var usernameInput = document.getElementById('username');
+        var username = usernameInput ? usernameInput.value : '';
+        var link = generateResumeURL(username);
+        var urlElement = document.getElementById('resume-link');
+        if (urlElement) {
+            urlElement.textContent = link;
+            urlElement.setAttribute('href', link);
+        }
+    }
+    // Attach the input event listener to the username field
+    var usernameInput = document.getElementById('username');
+    if (usernameInput) {
+        usernameInput.addEventListener('input', updateResumeLink);
+    }
+    (_a = document.getElementById('generate-link-button')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', updateResumeLink);
     var generateButton = document.getElementById("generate-resume-button");
     if (generateButton) {
         generateButton.addEventListener('click', generateResume);
@@ -112,4 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (saveButton) {
         saveButton.addEventListener('click', saveChanges);
     }
+    var downloadPDFButton = document.getElementById('download-pdf-button');
+    if (downloadPDFButton) {
+        downloadPDFButton.addEventListener('click', generatePDF);
+    }
+    // if (generateLinkButton) {
+    //     generateLinkButton.addEventListener('click', generateResumeLink);
+    // }
+    // if (generateLinkButton) {
+    //     generateLinkButton.addEventListener('click', generateResumeLink);
+    // }
 });

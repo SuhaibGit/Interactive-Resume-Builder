@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Resume Generator</title> 
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="module" src="dist/main.js"></script>
+    <script src="dist/bundle.js"></script>
 </head>
 <body style="background-image: url(hero-static.jpg); background-size: cover; align-items: center;">
     <div class="page2">
@@ -69,13 +72,22 @@
         
     </form>
 
-    <script src="main.js"></script>
+    
 </div>
 <div id="resume-container">
     <div id="resume-output" contenteditable="true"></div>
     <button id="edit-button" style="display: none;">Edit</button>
     <button id="save-button" style="display: none;">Save</button>
-</div>
-
+    <button id="download-pdf-button">Download PDF</button>
+    <br>
+    <br>
+    <input type="text" id="username" placeholder="Enter your username" />
+    <button id="generate-link-button">Generate Link</button>
+    <div>
+        <label>Generated Resume Link:</label>
+        <a id="resume-link" target="_blank"></a>
+    </div>
+<script src="main.js"></script>
+<script type="module" src="dist/main.js"></script>
 </body>
 </html>

@@ -1,9 +1,12 @@
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 document.addEventListener('DOMContentLoaded', () => { 
     const toggleSkillsButton = document.getElementById('Hide-skills');
     const skillsSection = document.getElementById('skills');
     const resumeContainer = document.getElementById("resume-container");
     const editButton = document.getElementById("edit-button");
-    const saveButton = document.getElementById("save-button");
+    const saveButton = document.getElementById("save-button"); 
+
 
     if (toggleSkillsButton && skillsSection) {
         toggleSkillsButton.addEventListener('click', () => {
@@ -66,6 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saveButton) saveButton.style.display = 'none';
     }
 
+    function generatePDF() {
+            const doc = new jsPDF();
+
+            const resumeContent = document.getElementById("resume-output");
+            if (resumeContent) {
+                doc.html(resumeContent, {
+                    callback: function (doc) {
+                        doc.save('resume.pdf');
+                    },
+                    x: 10,
+                    y: 10
+                });
+            }
+        }    
     function enableEditing() {
         const resumeSections = document.querySelectorAll('#resume-output h2, #resume-output p, #resume-output ul');
         resumeSections.forEach(section => {
@@ -83,6 +100,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editButton) editButton.style.display = 'inline';
         if (saveButton) saveButton.style.display = 'none';
     }
+    const baseurl = "vercel.app";
+    function generateResumeURL(username: string): string {
+        const trimmedUsername = username.trim();
+        if (!trimmedUsername) {
+            return '';
+        }
+        return `http://${trimmedUsername}.${baseurl}`;
+    }
+
+    function updateResumeLink() {
+        const usernameInput = document.getElementById('username') as HTMLInputElement;
+        const username = usernameInput ? usernameInput.value : '';
+        const link = generateResumeURL(username);
+
+        const urlElement = document.getElementById('resume-link') as HTMLAnchorElement;
+        if (urlElement) {
+            urlElement.textContent = link;
+            urlElement.setAttribute('href', link);
+        }
+    }
+    const usernameInput = document.getElementById('username') as HTMLInputElement;
+    if (usernameInput) {
+        usernameInput.addEventListener('input', updateResumeLink);
+    }
+
+    document.getElementById('generate-link-button')?.addEventListener('click', updateResumeLink);
 
     const generateButton = document.getElementById("generate-resume-button");
     if (generateButton) {
@@ -142,4 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveButton) {
         saveButton.addEventListener('click', saveChanges);
     }
+        const downloadPDFButton = document.getElementById('download-pdf-button');
+    if (downloadPDFButton) {
+        downloadPDFButton.addEventListener('click', generatePDF);
+    }
 });
+
+

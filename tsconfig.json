@@ -1,0 +1,23 @@
+
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+
+      "outDir": "./dist",                       // Directory for compiled JavaScript files
+      "rootDir": "./",  
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+      "*.ts"
+    ],
+    "exclude": [
+      "node_modules",
+      "dist"
+    ]
+  }
+  
+  
