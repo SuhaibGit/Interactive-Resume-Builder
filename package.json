@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "webpack"
+        "build": "npx webpack"
     },
     "devDependencies": {
         "typescript": "^5.5.4",
